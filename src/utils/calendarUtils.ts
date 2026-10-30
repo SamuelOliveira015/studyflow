@@ -87,25 +87,47 @@ export function escapeICalText(text: string): string {
 
 /**
  * Aplica line-folding conforme RFC 5545 (Seção 3.1).
- * Linhas com mais de 75 octetos/caracteres devem ser divididas inserindo CRLF seguido de espaço em branco.
+ * Cada linha física do arquivo não deve exceder 75 octetos (bytes UTF-8),
+ * desconsiderando o terminador CRLF. Linhas dobradas continuam com CRLF seguido de espaço.
+ * Utiliza TextEncoder nativo e itera por caracteres (code points) para nunca corromper acentos.
  */
-export function foldICalLine(line: string, maxLength: number = 75): string {
-  if (line.length <= maxLength) {
+export function foldICalLine(line: string, maxBytes: number = 75): string {
+  if (!line) return '';
+
+  const encoder = new TextEncoder();
+  // Se o total de bytes já couber na linha, não precisa dobrar
+  if (encoder.encode(line).length <= maxBytes) {
     return line;
   }
 
-  const parts: string[] = [];
-  parts.push(line.slice(0, maxLength));
-  let remaining = line.slice(maxLength);
+  const lines: string[] = [];
+  let currentLine = '';
+  let currentBytes = 0;
+  let isFirstLine = true;
 
-  // Linhas subsequentes têm 1 espaço inicial, então o comprimento máximo do conteúdo restante é maxLength - 1
-  while (remaining.length > 0) {
-    const chunk = remaining.slice(0, maxLength - 1);
-    parts.push(' ' + chunk);
-    remaining = remaining.slice(maxLength - 1);
+  // Itera por code points (usando for...of para tratar caracteres Unicode e emojis com segurança)
+  for (const char of line) {
+    const charBytes = encoder.encode(char).length;
+    // O limite para a primeira linha é maxBytes; para as seguintes é maxBytes - 1 (devido ao espaço ' ' de continuação)
+    const allowedLimit = isFirstLine ? maxBytes : maxBytes - 1;
+
+    // Se adicionar este caractere ultrapassar o limite de bytes da linha atual
+    if (currentBytes + charBytes > allowedLimit && currentBytes > 0) {
+      lines.push(isFirstLine ? currentLine : ' ' + currentLine);
+      currentLine = char;
+      currentBytes = charBytes;
+      isFirstLine = false;
+    } else {
+      currentLine += char;
+      currentBytes += charBytes;
+    }
   }
 
-  return parts.join('\r\n');
+  if (currentLine) {
+    lines.push(isFirstLine ? currentLine : ' ' + currentLine);
+  }
+
+  return lines.join('\r\n');
 }
 
 /**
