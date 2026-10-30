@@ -12,7 +12,7 @@
 
 <!-- Espaço reservado para a demonstração e captura de tela -->
 ## 📱 Demonstração Online
-> **Link da aplicação em produção:** [https://seu-usuario.github.io/studyflow/](https://seu-usuario.github.io/studyflow/) *(substitua pelo link após o deploy)*
+> **Status:** Demonstração online estará disponível em breve após a conclusão do deploy.
 
 ```
 [ ESPAÇO RESERVADO PARA SCREENSHOT OU GIF DA APLICAÇÃO ]
@@ -42,7 +42,7 @@ O **StudyFlow** foi projetado com uma interface acolhedora e direta: você abre 
 - [x] **Persistência Local Confiável (`localStorage`):** Os dados persistem entre recarregamentos (`F5`) e fechamentos de aba, com validação estrutural de segurança para evitar corrupção de dados.
 - [x] **Gerador de Cronogramas de Estudo:** Distribui sessões de estudo nos dias da semana em que o estudante tem disponibilidade (ex: Segundas, Quartas e Sextas) com duração personalizada (30m, 45m, 1h, 1h30).
 - [x] **Exportação para Google Agenda (.ics):** Download em 1 clique de arquivo de calendário no formato padronizado RFC 5545, 100% no navegador (sem permissões invasivas ou necessidade de login).
-- [x] **Integração Preparada para IA:** Suporte arquitetural para enriquecer títulos e tópicos das sessões via endpoint seguro (`/api/generate-schedule`), mantendo o gerador local como fallback resiliente e gratuito.
+- [ ] **Integração com Gemini API (Em validação):** Arquitetura preparada para enriquecer tópicos das sessões via endpoint seguro (`/api/generate-schedule`). No momento, o aplicativo utiliza o motor local pedagógico como gerador estável e gratuito.
 
 ---
 
@@ -66,7 +66,7 @@ O **StudyFlow** foi projetado com uma interface acolhedora e direta: você abre 
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/studyflow.git
+   git clone https://github.com/SamuelOliveira015/studyflow.git
    cd studyflow
    ```
 
@@ -107,7 +107,7 @@ O gerador de cronogramas do StudyFlow foi desenvolvido para funcionar sob qualqu
    - **Sessões intermediárias:** Conceitos centrais, fichamento e resolução de exercícios.
    - **Sessões finais:** Aplicação prática, testes e autoavaliação.
 3. **Resiliência e Custo Zero (Offline First):**  
-   O sistema possui suporte a enriquecimento por IA via backend. No entanto, se o usuário estiver offline, a rota não existir ou a quota gratuita for excedida, o **motor local gera o cronograma instantaneamente**, garantindo custo zero e funcionamento ininterrupto.
+   O sistema possui a arquitetura preparada para enriquecimento por IA via backend (em fase de testes e validação). Para garantir custo zero, estabilidade e funcionamento ininterrupto, o **motor local gera o cronograma instantaneamente**, operando 100% no navegador.
 
 ---
 
